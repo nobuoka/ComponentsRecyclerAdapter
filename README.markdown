@@ -12,8 +12,8 @@ This project is under development!
 Please see [the `ExampleAdapter` class](./demo/src/main/java/info/vividcode/android/app/example/cra/ExampleAdapter.java)
 in the `demo` project.
 
-The `demo` project has [the `ExampleAdapterOldStyle` class] also, which provides functions equivalent
-to the `ExampleAdapter` class using normal `RecyclerView.Adapter` class.
+The `demo` project has [the `ExampleAdapterOldStyle` class](./demo/src/main/java/info/vividcode/android/app/example/cra/ExampleAdapterOldStyle.java)
+also, which provides functions equivalent to the `ExampleAdapter` class using normal `RecyclerView.Adapter` class.
 Seeing it, you will contrast adapter in this library with normal one.
 
 ## License
