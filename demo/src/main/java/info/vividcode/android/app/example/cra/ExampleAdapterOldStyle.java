@@ -10,8 +10,8 @@ import info.vividcode.android.app.example.cra.holders.SectionTitleViewHolder;
 
 public class ExampleAdapterOldStyle extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private static final int ITEM_VIEW_TYPE_CONTENT = 1;
-    private static final int ITEM_VIEW_TYPE_SECTION_TITLE = 2;
+    private static final int VIEW_TYPE_CONTENT = 1;
+    private static final int VIEW_TYPE_SECTION_TITLE = 2;
 
     private List<String> mStringList;
     private List<ListItem> mItemContentList;
@@ -29,9 +29,9 @@ public class ExampleAdapterOldStyle extends RecyclerView.Adapter<RecyclerView.Vi
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
-            case ITEM_VIEW_TYPE_CONTENT:
+            case VIEW_TYPE_CONTENT:
                 return ContentViewHolder.FACTORY.createViewHolder(parent);
-            case ITEM_VIEW_TYPE_SECTION_TITLE:
+            case VIEW_TYPE_SECTION_TITLE:
                 return SectionTitleViewHolder.FACTORY.createViewHolder(parent);
             default:
                 throw new IllegalArgumentException("Invalid item view type: " + viewType);
@@ -47,8 +47,8 @@ public class ExampleAdapterOldStyle extends RecyclerView.Adapter<RecyclerView.Vi
             int posInStringList = position - mStringList.size();
             int type = getStringListItemViewType(posInStringList);
             ListItem item = mItemContentList.get(posInStringList);
-            if (type == ITEM_VIEW_TYPE_SECTION_TITLE) {
-                ((SectionTitleViewHolder) holder).updateText(((ListItem.SectionHeader) item).title);
+            if (type == VIEW_TYPE_SECTION_TITLE) {
+                ((SectionTitleViewHolder) holder).updateSectionTitle(((ListItem.SectionHeader) item).title);
             } else {
                 ((ContentViewHolder) holder).updateText(((ListItem.Content) item).data);
             }
@@ -58,7 +58,7 @@ public class ExampleAdapterOldStyle extends RecyclerView.Adapter<RecyclerView.Vi
     @Override
     public int getItemViewType(int position) {
         if (position < mStringList.size()) {
-            return ITEM_VIEW_TYPE_CONTENT;
+            return VIEW_TYPE_CONTENT;
         } else {
             return getStringListItemViewType(position - mStringList.size());
         }
@@ -67,8 +67,8 @@ public class ExampleAdapterOldStyle extends RecyclerView.Adapter<RecyclerView.Vi
     private int getStringListItemViewType(int positionInStringList) {
         ListItem item = mItemContentList.get(positionInStringList);
         return item.getType() == ListItem.Type.SECTION_HEADER ?
-                ITEM_VIEW_TYPE_SECTION_TITLE :
-                ITEM_VIEW_TYPE_CONTENT;
+                VIEW_TYPE_SECTION_TITLE :
+                VIEW_TYPE_CONTENT;
     }
 
 }

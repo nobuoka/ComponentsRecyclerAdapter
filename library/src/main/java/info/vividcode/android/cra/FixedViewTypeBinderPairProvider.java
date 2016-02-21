@@ -14,13 +14,20 @@
  * limitations under the License.
  */
 
-package info.vividcode.android.widget;
+package info.vividcode.android.cra;
 
-/**
- * 項目を受け取ってそれに応じた view type を返すメソッドを持つインターフェイス。
- * {@link Component} を実装する際に使用される。
- * @param <T> 項目の型。
- */
-public interface ViewBindingTypeMapper<T> {
-    ComponentsRecyclerAdapter.ViewBindingType<?, T> getViewType(T item, int componentPosition);
+/** 常に固定の値を返す {@link ViewTypeBinderPairProvider} の実装。 */
+public class FixedViewTypeBinderPairProvider<T> implements ViewTypeBinderPairProvider<T> {
+
+    private final ViewTypeBinderPair<?, T> mViewType;
+
+    public FixedViewTypeBinderPairProvider(ViewTypeBinderPair<?, T> vbType) {
+        mViewType = vbType;
+    }
+
+    @Override
+    public ViewTypeBinderPair<?, T> getViewTypeBinderPair(Component<T> item, int positionInComponent) {
+        return mViewType;
+    }
+
 }

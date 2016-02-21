@@ -14,33 +14,28 @@
  * limitations under the License.
  */
 
-package info.vividcode.android.widget.components;
+package info.vividcode.android.cra.components;
 
 import java.util.Collections;
 import java.util.List;
 
-import info.vividcode.android.widget.ComponentsRecyclerAdapter;
-import info.vividcode.android.widget.FixedViewBindingTypeSupplier;
-import info.vividcode.android.widget.ViewBindingTypeMapper;
+import info.vividcode.android.cra.ViewTypeBinderPairProvider;
 
-public class ListReferenceComponent<T> extends AbstractComponentUnit<T> {
+public class ListReferenceComponent<T> extends AbstractLeafComponent<T> {
 
     private List<T> mList = Collections.emptyList();
 
-    public static <T> ListReferenceComponent<T> create(ViewBindingTypeMapper<T> mapper) {
-        return new ListReferenceComponent<>(mapper);
+    public static <T> ListReferenceComponent<T> create(ViewTypeBinderPairProvider<T> provider) {
+        return new ListReferenceComponent<>(provider);
     }
 
-    public static <T> ListReferenceComponent<T> create(ComponentsRecyclerAdapter.ViewBindingType<?, T> type) {
-        return new ListReferenceComponent<>(new FixedViewBindingTypeSupplier<>(type));
-    }
-
-    private ListReferenceComponent(ViewBindingTypeMapper<T> mapper) {
-        super(mapper);
+    private ListReferenceComponent(ViewTypeBinderPairProvider<T> provider) {
+        super(provider);
     }
 
     public void setList(List<T> list) {
         mList = list;
+        getObservable().notifyChanged();
     }
 
     public List<T> getList() {
@@ -48,13 +43,13 @@ public class ListReferenceComponent<T> extends AbstractComponentUnit<T> {
     }
 
     @Override
-    public int getComponentItemCount() {
+    public int getItemCount() {
         return mList.size();
     }
 
     @Override
-    public T getItem(int componentPosition) {
-        return mList.get(componentPosition);
+    public T getItem(int positionInThisComponent) {
+        return mList.get(positionInThisComponent);
     }
 
 }

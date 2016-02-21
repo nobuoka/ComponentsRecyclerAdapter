@@ -6,18 +6,19 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import info.vividcode.android.app.example.cra.R;
-import info.vividcode.android.widget.ComponentsRecyclerAdapter;
+import info.vividcode.android.cra.ViewHolderFactory;
 
 public class SectionTitleViewHolder extends RecyclerView.ViewHolder {
 
-    public static final ComponentsRecyclerAdapter.ViewHolderFactory<SectionTitleViewHolder> FACTORY =
-    new ComponentsRecyclerAdapter.ViewHolderFactory<SectionTitleViewHolder>() {
-        @Override
-        public SectionTitleViewHolder createViewHolder(ViewGroup parent) {
-            TextView v = (TextView) LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_example2, parent, false);
-            return new SectionTitleViewHolder(v);
-        }
-    };
+    public static final ViewHolderFactory<SectionTitleViewHolder> FACTORY =
+            new ViewHolderFactory<SectionTitleViewHolder>() {
+                @Override
+                public SectionTitleViewHolder createViewHolder(ViewGroup parent) {
+                    TextView v = (TextView) LayoutInflater.from(parent.getContext())
+                            .inflate(R.layout.item_section_title, parent, false);
+                    return new SectionTitleViewHolder(v);
+                }
+            };
 
     private final TextView mTextView;
 
@@ -26,7 +27,7 @@ public class SectionTitleViewHolder extends RecyclerView.ViewHolder {
         mTextView = itemView;
     }
 
-    public void updateText(String text) {
+    public void updateSectionTitle(String text) {
         mTextView.setText(text);
     }
 

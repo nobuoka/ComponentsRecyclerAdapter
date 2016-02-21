@@ -1,9 +1,16 @@
+plugins {
+    id "me.tatarka.retrolambda" version "3.2.5"
+}
 apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     defaultConfig {
         applicationId "info.vividcode.android.example.componentsrecycleradapter"
         minSdkVersion 10

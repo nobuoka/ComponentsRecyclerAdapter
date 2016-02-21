@@ -1,43 +1,64 @@
 package info.vividcode.android.app.example.cra;
 
+import java.util.Arrays;
+
 import info.vividcode.android.app.example.cra.holders.ContentViewHolder;
 import info.vividcode.android.app.example.cra.holders.SectionTitleViewHolder;
-import info.vividcode.android.widget.Component;
-import info.vividcode.android.widget.ComponentsRecyclerAdapter;
-import info.vividcode.android.widget.ViewBindingTypeMapper;
-import info.vividcode.android.widget.components.ComponentSeries;
-import info.vividcode.android.widget.components.ListReferenceComponent;
+import info.vividcode.android.cra.ComponentsRecyclerAdapter;
+import info.vividcode.android.cra.FixedViewTypeBinderPairProvider;
+import info.vividcode.android.cra.ViewHolderFactoryRegistry;
+import info.vividcode.android.cra.ViewType;
+import info.vividcode.android.cra.ViewTypeBinderPair;
+import info.vividcode.android.cra.ViewTypeBinderPairProvider;
+import info.vividcode.android.cra.components.ComponentSeries;
+import info.vividcode.android.cra.components.ListReferenceComponent;
 
 public class ExampleAdapter extends ComponentsRecyclerAdapter {
 
     // `onCreateViewHolder` 相当の処理の登録。
-    public final ViewType<ContentViewHolder> viewTypeContent =
-            addViewHolderFactory(ContentViewHolder.FACTORY);
-    public final ViewType<SectionTitleViewHolder> viewTypeSectionTitle =
-            addViewHolderFactory(SectionTitleViewHolder.FACTORY);
+    public static final ViewTypes VIEW_TYPES = new ViewTypes();
+    public static class ViewTypes extends ViewHolderFactoryRegistry {
+        public final ViewType<ContentViewHolder> content = register(ContentViewHolder.FACTORY);
+        public final ViewType<SectionTitleViewHolder> sectionTitle = register(SectionTitleViewHolder.FACTORY);
+    }
 
-    // `onBindViewHolder` 相当の処理の登録。
-    private final ViewBindingType<ContentViewHolder, String> mVBTypeContentString =
-            addBinder(viewTypeContent, new ContentStringBinder());
-    private final ViewBindingType<ContentViewHolder, ListItem> mVBTypeContentItem =
-            addBinder(viewTypeContent, new ContentItemBinder());
-    private final ViewBindingType<SectionTitleViewHolder, ListItem> mVBTypeSectionTitleItem =
-            addBinder(viewTypeSectionTitle, new SectionTitleItemBinder());
+    // Item view type と Binder のペアを生成。
+    private static final
+    ViewTypeBinderPair<ContentViewHolder, String> VTB_CONTENT_STRING = ViewTypeBinderPair.create(
+            VIEW_TYPES.content,
+            (holder, component, positionInComponent, positionInAllItems) ->
+                    holder.updateText(component.getItem(positionInComponent))
+    );
+    private static final
+    ViewTypeBinderPair<ContentViewHolder, ListItem> VTB_CONTENT_LIST_ITEM = ViewTypeBinderPair.create(
+            VIEW_TYPES.content,
+            (holder, component, positionInComponent, positionInAllItems) ->
+                    holder.updateText(((ListItem.Content) (component.getItem(positionInComponent))).data)
+    );
+    private static final
+    ViewTypeBinderPair<SectionTitleViewHolder, ListItem> VTB_SECTION_TITLE_LIST_ITEM = ViewTypeBinderPair.create(
+            VIEW_TYPES.sectionTitle,
+            (holder, component, positionInComponent, positionInAllItems) ->
+                    holder.updateSectionTitle(((ListItem.SectionHeader) (component.getItem(positionInComponent))).title)
+    );
+
+    private static final ViewTypeBinderPairProvider<ListItem> LIST_ITEM_TYPE_DISCRIMINATOR =
+            (c, posInComponent) -> (c.getItem(posInComponent).getType() == ListItem.Type.SECTION_HEADER ?
+                    VTB_SECTION_TITLE_LIST_ITEM :
+                    VTB_CONTENT_LIST_ITEM);
+
+    public ExampleAdapter() {
+        super(VIEW_TYPES);
+    }
 
     // 表示のためのデータ構造の定義 (item view type の指定も)。
     private final ListReferenceComponent<String> mStringListComponent =
-            ListReferenceComponent.create(mVBTypeContentString);
+            ListReferenceComponent.create(new FixedViewTypeBinderPairProvider<>(VTB_CONTENT_STRING));
     private final ListReferenceComponent<ListItem> mItemListComponent =
-            ListReferenceComponent.create(new ViewBindingTypeMapper<ListItem>() {
-                @Override
-                public ViewBindingType<?, ListItem> getViewType(ListItem item, int componentPosition) {
-                    return (item.getType() == ListItem.Type.SECTION_HEADER ? mVBTypeSectionTitleItem : mVBTypeContentItem);
-                }
-            });
-    private final ComponentSeries mRootComponent = new ComponentSeries();
+            ListReferenceComponent.create(LIST_ITEM_TYPE_DISCRIMINATOR);
+    private final ComponentSeries mRootComponent =
+            ComponentSeries.createWithChildComponents(Arrays.asList(mStringListComponent, mItemListComponent));
     {
-        mRootComponent.addChildComponent(mStringListComponent);
-        mRootComponent.addChildComponent(mItemListComponent);
         setComponent(mRootComponent);
     }
 
@@ -48,24 +69,4 @@ public class ExampleAdapter extends ComponentsRecyclerAdapter {
         return mItemListComponent;
     }
 
-    public static class ContentItemBinder implements Binder<ContentViewHolder, ListItem> {
-        @Override
-        public void bindViewHolder(ContentViewHolder holder, Component<ListItem> item, int positionInDataComponent, int positionInAllItems) {
-            holder.updateText(((ListItem.Content) (item.getItem(positionInDataComponent))).data);
-        }
-    }
-
-    public static class ContentStringBinder implements Binder<ContentViewHolder, String> {
-        @Override
-        public void bindViewHolder(ContentViewHolder holder, Component<String> item, int positionInDataComponent, int positionInAllItems) {
-            holder.updateText(item.getItem(positionInDataComponent));
-        }
-    }
-
-    public static class SectionTitleItemBinder implements Binder<SectionTitleViewHolder, ListItem> {
-        @Override
-        public void bindViewHolder(SectionTitleViewHolder holder, Component<ListItem> item, int positionInDataComponent, int positionInAllItems) {
-            holder.updateText(((ListItem.SectionHeader) (item.getItem(positionInDataComponent))).title);
-        }
-    }
 }

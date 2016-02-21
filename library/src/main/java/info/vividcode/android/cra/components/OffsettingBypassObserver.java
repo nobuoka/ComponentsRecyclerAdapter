@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package info.vividcode.android.widget.components;
+package info.vividcode.android.cra.components;
 
-import info.vividcode.android.widget.Component;
-import info.vividcode.android.widget.ComponentsRecyclerAdapter;
+import info.vividcode.android.cra.Component;
+import info.vividcode.android.cra.ComponentsRecyclerAdapter;
 
 /**
  * {@link ComponentsRecyclerAdapter.ComponentObservable} で発生したイベントを監視し、
