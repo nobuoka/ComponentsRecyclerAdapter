@@ -16,18 +16,22 @@
 
 package info.vividcode.android.cra;
 
+import android.support.v7.widget.RecyclerView;
+
 /** 常に固定の値を返す {@link ViewTypeBinderPairProvider} の実装。 */
-public class FixedViewTypeBinderPairProvider<T> implements ViewTypeBinderPairProvider<T> {
+public class FixedViewTypeBinderPairProvider<VH extends RecyclerView.ViewHolder, T> implements ViewTypeBinderPairProvider<T> {
 
-    private final ViewTypeBinderPair<?, T> mViewType;
+    private final ViewType<VH> mViewType;
+    private final Binder<VH, T> mBinder;
 
-    public FixedViewTypeBinderPairProvider(ViewTypeBinderPair<?, T> vbType) {
-        mViewType = vbType;
+    public FixedViewTypeBinderPairProvider(ViewType<VH> viewType, Binder<VH, T> binder) {
+        mViewType = viewType;
+        mBinder = binder;
     }
 
     @Override
-    public ViewTypeBinderPair<?, T> getViewTypeBinderPair(Component<T> item, int positionInComponent) {
-        return mViewType;
+    public void getViewTypeBinderPair(ViewTypeBinderPair<T> out, Component<T> item, int positionInComponent) {
+        out.set(mViewType, mBinder);
     }
 
 }

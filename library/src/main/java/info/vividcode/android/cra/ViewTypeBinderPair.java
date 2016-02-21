@@ -2,19 +2,22 @@ package info.vividcode.android.cra;
 
 import android.support.v7.widget.RecyclerView;
 
-public class ViewTypeBinderPair<VH extends RecyclerView.ViewHolder, D> {
+public class ViewTypeBinderPair<D> {
 
-    public final ViewType<VH> viewType;
-    public final Binder<VH, D> binder;
+    private ViewType<?> mViewType;
+    private Binder<?, D> mBinder;
 
-    public static <VH extends RecyclerView.ViewHolder, D> ViewTypeBinderPair<VH, D> create(
-            ViewType<VH> viewType, Binder<VH, D> binder) {
-        return new ViewTypeBinderPair<>(viewType, binder);
+    public <VH extends RecyclerView.ViewHolder> void set(ViewType<VH> viewType, Binder<VH, D> binder) {
+        mViewType = viewType;
+        mBinder = binder;
     }
 
-    ViewTypeBinderPair(ViewType<VH> viewType, Binder<VH, D> binder) {
-        this.viewType = viewType;
-        this.binder = binder;
+    public ViewType<?> getViewType() {
+        return mViewType;
+    }
+
+    public Binder<?, D> getBinder() {
+        return mBinder;
     }
 
 }

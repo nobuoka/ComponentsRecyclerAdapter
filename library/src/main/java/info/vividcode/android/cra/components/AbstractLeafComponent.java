@@ -41,22 +41,29 @@ public abstract class AbstractLeafComponent<T> implements Component<T> {
         return mObservable;
     }
 
+    private final ViewTypeBinderPair<T> mBuf = new ViewTypeBinderPair<>();
+
     // handler が扱う ViewHolder の型について関知しないが、生成時に正しい型のオブジェクトが生成されて
     // いるはずなので、unchecked 警告を抑制する。
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int positionInThisComponent, int positionInAllItems) {
-        ((Binder<RecyclerView.ViewHolder, T>) (getViewTypeBinderPair(positionInThisComponent)).binder)
-                .bindViewHolder(holder, this, positionInThisComponent, positionInAllItems);
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int poInThisComponent, int posInAllItems) {
+        synchronized (mBuf) {
+            getViewTypeBinderPair(mBuf, poInThisComponent);
+            ((Binder<RecyclerView.ViewHolder, T>) mBuf.getBinder())
+                    .bindViewHolder(holder, this, poInThisComponent, posInAllItems);
+        }
     }
 
     @Override
     public final int getItemViewType(int positionInThisComponent, int positionInAdapter) {
-        return getViewTypeBinderPair(positionInThisComponent).viewType.value;
+        synchronized (mBuf) {
+            getViewTypeBinderPair(mBuf, positionInThisComponent);
+            return mBuf.getViewType().value;
+        }
     }
 
-    public final ViewTypeBinderPair<?, T>
-    getViewTypeBinderPair(int positionInThisComponent) {
-        return viewTypeBinderPairProvider.getViewTypeBinderPair(this, positionInThisComponent);
+    void getViewTypeBinderPair(ViewTypeBinderPair<T> out, int posInThisComponent) {
+        viewTypeBinderPairProvider.getViewTypeBinderPair(out, this, posInThisComponent);
     }
 
 }

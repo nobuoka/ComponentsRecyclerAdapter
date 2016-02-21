@@ -23,6 +23,6 @@ package info.vividcode.android.cra;
  */
 public interface ViewTypeBinderPairProvider<T> {
 
-    ViewTypeBinderPair<?, T> getViewTypeBinderPair(Component<T> component, int positionInComponent);
+    void getViewTypeBinderPair(ViewTypeBinderPair<T> out, Component<T> component, int positionInComponent);
 
 }
