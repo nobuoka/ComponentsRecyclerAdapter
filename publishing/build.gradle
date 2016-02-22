@@ -1,0 +1,35 @@
+plugins {
+    id "com.jfrog.bintray" version "1.5"
+}
+apply plugin: "maven-publish"
+
+publishing {
+    publications {
+        aarPublication(MavenPublication) {
+            groupId 'info.vividcode.android'
+            artifactId 'components-recycler-adapter'
+            version '0.1.0'
+            artifacts = project(':library').configurations.archives.allArtifacts
+        }
+    }
+}
+
+bintray {
+    user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
+    key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
+    publications = ['aarPublication']
+    pkg {
+        repo = 'maven'
+        name = 'components-recycler-adapter'
+        userOrg = user
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/nobuoka/ComponentsRecyclerAdapter'
+        version {
+            name = '0.1.0'
+            desc = 'Android library'
+            //vcsTag = '1.3.0'
+            //attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
+        }
+    }
+}
+bintrayUpload.dependsOn(project(':library').assemble)
