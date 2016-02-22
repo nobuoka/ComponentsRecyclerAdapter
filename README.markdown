@@ -120,3 +120,4 @@ limitations under the License.
 
 * [RecyclerView-MultipleViewTypesAdapter](https://github.com/yqritc/RecyclerView-MultipleViewTypesAdapter) by yqritc
 * [Smart Adapters Library](https://github.com/mrmans0n/smart-adapters) by Nacho López
+* [recyclerview-binder](https://github.com/satorufujiwara/recyclerview-binder) by Satoru Fujiwara

@@ -46,7 +46,7 @@ public interface Component<T> {
      * @param positionInThisComponent A position in this component to query.
      * @return Integer value identifying the type of view (= view type) representing the item at specified position.
      *
-     * @see {@link android.support.v7.widget.RecyclerView.Adapter#getItemViewType(int)}
+     * @see android.support.v7.widget.RecyclerView.Adapter#getItemViewType(int)
      */
     int getItemViewType(int positionInThisComponent);
 

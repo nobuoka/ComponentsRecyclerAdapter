@@ -37,3 +37,37 @@ dependencies {
         exclude module: 'support-annotations'
     }
 }
+
+android.libraryVariants.all { variant ->
+    if (variant.name == 'release') {
+        def javadocTask = task("javadoc${variant.name.capitalize()}", type: Javadoc) {
+            description "Generates Javadoc for ${variant.name}."
+
+            //source = variant.javaCompile.source
+            // From https://github.com/bintray/bintray-examples/blob/master/gradle-aar-example/build.gradle
+            source = android.sourceSets.main.java.srcDirs // Not good because it doesn't include product-flavor-specific source codes.
+
+            //destinationDir = reporting.file("${variant.name}-docs")
+
+            //ext.androidJar = "${android.plugin.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
+            //classpath = files(variant.javaCompile.classpath.files)// + files(ext.androidJar)
+            // From https://github.com/bintray/bintray-examples/blob/master/gradle-aar-example/build.gradle
+            classpath = files(variant.javaCompile.classpath.files) + project.files(android.getBootClasspath().join(File.pathSeparator))
+        }
+        def javadocJarTask = task("javadocsJar${variant.name.capitalize()}", type: Jar, dependsOn: javadocTask) {
+            classifier = "javadoc"
+            from javadocTask.destinationDir
+        }
+        def sourcesJarTask = task("sourcesJar${variant.name.capitalize()}", type: Jar) {
+            classifier = "sources"
+            from variant.javaCompile.source
+        }
+
+        /* artifacts management.
+         * See: http://www.gradle.org/docs/current/userguide/artifact_management.html */
+        artifacts {
+            archives javadocJarTask
+            archives sourcesJarTask
+        }
+    }
+}

@@ -27,7 +27,7 @@ public interface Binder<VH extends RecyclerView.ViewHolder, D> {
 
     /**
      * This method update the passed view's contents to reflect the item at the given position in a passed component.
-     * This is usually called from {@link Component#onBindViewHolder(RecyclerView.ViewHolder, int, int)}.
+     * This is usually called from {@link Component#onBindViewHolder(RecyclerView.ViewHolder, int)}.
      * @param holder The view holder holding a view which is target of updating.
      * @param component The component containing the item.
      * @param positionInComponent The position of the item within the component.
