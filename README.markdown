@@ -9,7 +9,8 @@ Using it, you can easily create RecyclerView with multiple view types, or with c
 You may face following problems associated with `RecyclerView` when you use a simple subclass
 inheriting `RecyclerView.Adapter`.
 
-* Multiple item types are
+* If multiple view types are used (not only one view type), it's needed to be conscious of a relation
+ between a view type and a class of a view holder at more than one part.
 * It's hard to handle complex data structure to display composed of multiple data sets.
     * e.g.
         * displaying items in a data set followed by items in another data set,
@@ -26,13 +27,15 @@ Typically, it becomes as follows.
 
 ```java
 public class ContentViewHolder extends RecyclerView.ViewHolder {
+    /** Factory will be used from RecyclerView.Adapter#onCreateViewHolder method. */
     public static final ViewHolderFactory<ContentViewHolder> FACTORY =
             new ViewHolderFactory<ContentViewHolder>() {
                 @Override public ContentViewHolder createViewHolder(ViewGroup parent) {
                     TextView v = (TextView) LayoutInflater.from(parent.getContext())
                             .inflate(R.layout.item_content, parent, false);
                     return new ContentViewHolder(v);
-                }};
+                }
+            };
 
     public final TextView textView;
 
@@ -48,6 +51,7 @@ A subclass of the `Binder` class also need to be defined.
 ```java
 public class StringContentBinder implements Binder<ContentViewHolder, String> {
     public static final StringContentBinder INSTANCE = new StringContentBinder();
+
     @Override
     public void bindViewHolder(ContentViewHolder h, Component<String> c, int posInComponent) {
         h.updateText(c.getItem(posInComponent));
@@ -96,7 +100,21 @@ Seeing it, you will contrast adapter in this library with normal one.
 
 ## License
 
-Apache License, Version 2.0
+```
+Copyright 2016 NOBUOKA Yu
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
 
 ## Similar libraries
 
