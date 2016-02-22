@@ -30,8 +30,9 @@ public class FixedViewTypeBinderPairProvider<VH extends RecyclerView.ViewHolder,
     }
 
     @Override
-    public void getViewTypeBinderPair(ViewTypeBinderPair<T> out, Component<T> item, int positionInComponent) {
-        out.set(mViewType, mBinder);
+    public ViewTypeBinderPair<T> getViewTypeBinderPair(
+            ViewTypeBinderPair.Builder<T> out, Component<T> component, int posInComponent) {
+        return out.set(mViewType, mBinder);
     }
 
 }

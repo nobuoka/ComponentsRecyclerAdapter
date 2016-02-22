@@ -125,7 +125,7 @@ public class ComponentsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
     public final void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (mComponent == null)
             throw new RuntimeException("`onBindViewHolder` cannot be called when there is no component.");
-        mComponent.onBindViewHolder(holder, position, position);
+        mComponent.onBindViewHolder(holder, position);
     }
 
     /** {@inheritDoc} */
@@ -139,7 +139,7 @@ public class ComponentsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
     public final int getItemViewType(int position) {
         if (mComponent == null)
             throw new RuntimeException("`getItemViewType` cannot be called when there is no component.");
-        return mComponent.getItemViewType(position, position);
+        return mComponent.getItemViewType(position);
     }
 
 }

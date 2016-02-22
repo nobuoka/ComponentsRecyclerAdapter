@@ -9,6 +9,8 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        // See: https://developer.android.com/intl/ja/tools/testing-support-library/index.html#setup
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -19,6 +21,19 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:recyclerview-v7:23.1.1'
+    compile 'com.android.support:recyclerview-v7:23+'
     testCompile 'junit:junit:4.12'
+
+    androidTestCompile 'com.google.guava:guava:19.0'
+    androidTestCompile 'org.mockito:mockito-core:1.10.19'
+    androidTestCompile 'com.android.support:recyclerview-v7:23.1.1'
+    // Testing Support Library
+    // See: https://developer.android.com/intl/ja/tools/testing-support-library/index.html#setup
+    androidTestCompile('com.android.support.test:runner:0.4.1') {
+        exclude module: 'support-annotations'
+    }
+    // Set this dependency to use JUnit 4 rules
+    androidTestCompile('com.android.support.test:rules:0.4.1') {
+        exclude module: 'support-annotations'
+    }
 }

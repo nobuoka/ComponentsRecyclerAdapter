@@ -70,17 +70,23 @@ public class ComponentSeries implements Component {
         return mObservable;
     }
 
-    <A1, A2, R> R callBackForChildComponentItem(
-            int positionInThisComponent, ChildComponentItemCallback<A1, A2, R> c, A1 arg1, A2 arg2) {
+    <A, R> R callBackForChildComponentItem(
+            int positionInThisComponent, ChildComponentItemCallback<A, R> c, A arg) {
+        if (positionInThisComponent < 0)
+            throw new IndexOutOfBoundsException(
+                    "Position must be greater than or equal to zero. (Specified position: " +
+                    positionInThisComponent + ")");
         int filteredPos = positionInThisComponent;
         for (Component dc : mComponents) {
             int count = dc.getItemCount();
             if (filteredPos < count) {
-                return c.onChildComponentAndPositionFound(dc, filteredPos, arg1, arg2);
+                return (R) c.onChildComponentAndPositionFound(dc, filteredPos, arg);
             }
             filteredPos -= count;
         }
-        throw new RuntimeException();
+        throw new IndexOutOfBoundsException(
+                "Position must be smaller than " + getItemCount() + ". " +
+                "(Specified position: " + positionInThisComponent + ")");
     }
 
     @Override
@@ -94,24 +100,23 @@ public class ComponentSeries implements Component {
 
     @Override
     public void onBindViewHolder(
-            RecyclerView.ViewHolder holder, int positionInThisComponent, int positionInAllItems) {
+            RecyclerView.ViewHolder holder, int positionInThisComponent) {
         callBackForChildComponentItem(
-                positionInThisComponent, ChildComponentItemCallbacks.CC_ON_BIND_VIEW_HOLDER,
-                holder, positionInAllItems);
+                positionInThisComponent, ChildComponentItemCallbacks.CC_ON_BIND_VIEW_HOLDER, holder);
     }
 
     @Override
-    public int getItemViewType(int positionInThisComponent, int positionInAdapter) {
+    public int getItemViewType(int positionInThisComponent) {
         return callBackForChildComponentItem(
                 positionInThisComponent, ChildComponentItemCallbacks.CC_GET_ITEM_VIEW_TYPE,
-                positionInAdapter, ChildComponentItemCallbacks.VOID);
+                ChildComponentItemCallbacks.VOID);
     }
 
     @Override
     public Object getItem(int positionInThisComponent) {
         return callBackForChildComponentItem(
                 positionInThisComponent, ChildComponentItemCallbacks.CC_GET_ITEM,
-                ChildComponentItemCallbacks.VOID, ChildComponentItemCallbacks.VOID);
+                ChildComponentItemCallbacks.VOID);
     }
 
 }

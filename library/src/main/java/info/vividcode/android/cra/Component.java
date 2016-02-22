@@ -33,7 +33,7 @@ public interface Component<T> {
      */
     ComponentsRecyclerAdapter.ComponentObservable getObservable();
 
-    void onBindViewHolder(RecyclerView.ViewHolder holder, int positionInThisComponent, int positionInAllItems);
+    void onBindViewHolder(RecyclerView.ViewHolder holder, int positionInThisComponent);
 
     /**
      * Returns the sum of a number of items in this component and a number of items in descendant components.
@@ -44,12 +44,11 @@ public interface Component<T> {
     /**
      * Returns the view type of the item at specified position.
      * @param positionInThisComponent A position in this component to query.
-     * @param positionInAdapter A position in all items to query.
      * @return Integer value identifying the type of view (= view type) representing the item at specified position.
      *
      * @see {@link android.support.v7.widget.RecyclerView.Adapter#getItemViewType(int)}
      */
-    int getItemViewType(int positionInThisComponent, int positionInAdapter);
+    int getItemViewType(int positionInThisComponent);
 
     /**
      * Returns the item at specified position.

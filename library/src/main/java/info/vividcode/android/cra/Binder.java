@@ -31,8 +31,7 @@ public interface Binder<VH extends RecyclerView.ViewHolder, D> {
      * @param holder The view holder holding a view which is target of updating.
      * @param component The component containing the item.
      * @param positionInComponent The position of the item within the component.
-     * @param positionInAllItems The position of the item within the adapter's data set
      */
-    void bindViewHolder(VH holder, Component<D> component, int positionInComponent, int positionInAllItems);
+    void bindViewHolder(VH holder, Component<D> component, int positionInComponent);
 
 }

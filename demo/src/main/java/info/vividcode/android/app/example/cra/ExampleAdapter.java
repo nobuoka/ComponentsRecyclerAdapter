@@ -10,6 +10,8 @@ import info.vividcode.android.cra.ComponentsRecyclerAdapter;
 import info.vividcode.android.cra.FixedViewTypeBinderPairProvider;
 import info.vividcode.android.cra.ViewHolderFactoryRegistry;
 import info.vividcode.android.cra.ViewType;
+import info.vividcode.android.cra.ViewTypeBinderPair;
+import info.vividcode.android.cra.ViewTypeBinderPairProvider;
 import info.vividcode.android.cra.components.ComponentSeries;
 import info.vividcode.android.cra.components.ListReferenceComponent;
 
@@ -24,15 +26,20 @@ public class ExampleAdapter extends ComponentsRecyclerAdapter {
 
     // サブデータセットを扱うコンポーネントを定義。
     private final ListReferenceComponent<String> mStringListComponent = ListReferenceComponent.create(
-            new FixedViewTypeBinderPairProvider<>(VIEW_TYPES.content, StringContentBinder.INSTANCE));
+            // このコンポーネントが扱う項目の view type は全て content で、StringContentBinder を使って bind される。
+            new FixedViewTypeBinderPairProvider<>(VIEW_TYPES.content, StringContentBinder.INSTANCE)
+    );
 
     private final ListReferenceComponent<ListItem> mItemListComponent = ListReferenceComponent.create(
-            (b, c, posInComponent) -> {
-                // 項目の内容に応じて view type を変化させる。
-                if (c.getItem(posInComponent).getType() == ListItem.Type.SECTION_HEADER)
-                    b.set(VIEW_TYPES.sectionTitle, ListItemSectionTitleBinder.INSTANCE);
-                else
-                    b.set(VIEW_TYPES.content, ListItemContentBinder.INSTANCE);
+            new ViewTypeBinderPairProvider<ListItem>() {
+                @Override
+                public ViewTypeBinderPair<ListItem> getViewTypeBinderPair(
+                        ViewTypeBinderPair.Builder<ListItem> out, Component<ListItem> c, int posInComponent) {
+                    // 項目の内容に応じて view type を変化させる。
+                    return (c.getItem(posInComponent).getType() == ListItem.Type.SECTION_HEADER ?
+                            out.set(VIEW_TYPES.sectionTitle, ListItemSectionTitleBinder.INSTANCE) :
+                            out.set(VIEW_TYPES.content, ListItemContentBinder.INSTANCE));
+                }
             });
 
     public ExampleAdapter() {
@@ -52,7 +59,7 @@ public class ExampleAdapter extends ComponentsRecyclerAdapter {
     public static class StringContentBinder implements Binder<ContentViewHolder, String> {
         public static final StringContentBinder INSTANCE = new StringContentBinder();
         @Override
-        public void bindViewHolder(ContentViewHolder h, Component<String> c, int posInComponent, int posInAllItems) {
+        public void bindViewHolder(ContentViewHolder h, Component<String> c, int posInComponent) {
             h.updateText(c.getItem(posInComponent));
         }
     }
@@ -60,7 +67,7 @@ public class ExampleAdapter extends ComponentsRecyclerAdapter {
     public static class ListItemContentBinder implements Binder<ContentViewHolder, ListItem> {
         public static final ListItemContentBinder INSTANCE = new ListItemContentBinder();
         @Override
-        public void bindViewHolder(ContentViewHolder h, Component<ListItem> c, int posInComponent, int posInAllItems) {
+        public void bindViewHolder(ContentViewHolder h, Component<ListItem> c, int posInComponent) {
             h.updateText(((ListItem.Content) (c.getItem(posInComponent))).data);
         }
     }
@@ -68,7 +75,7 @@ public class ExampleAdapter extends ComponentsRecyclerAdapter {
     public static class ListItemSectionTitleBinder implements Binder<SectionTitleViewHolder, ListItem> {
         public static final ListItemSectionTitleBinder INSTANCE = new ListItemSectionTitleBinder();
         @Override
-        public void bindViewHolder(SectionTitleViewHolder h, Component<ListItem> c, int posInComponent, int posInAllItems) {
+        public void bindViewHolder(SectionTitleViewHolder h, Component<ListItem> c, int posInComponent) {
             h.updateSectionTitle(((ListItem.SectionHeader) (c.getItem(posInComponent))).title);
         }
     }

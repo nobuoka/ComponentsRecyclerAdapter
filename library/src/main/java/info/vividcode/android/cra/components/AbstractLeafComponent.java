@@ -25,6 +25,12 @@ import info.vividcode.android.cra.ComponentsRecyclerAdapter;
 import info.vividcode.android.cra.ViewTypeBinderPair;
 import info.vividcode.android.cra.ViewTypeBinderPairProvider;
 
+/**
+ * Base class for a component which manages items directly.
+ * Using this, you can define a component class only by implementing {@link #getItemCount()} method and
+ * {@link #getItem(int)} method.
+ * @param <T> Type of items.
+ */
 public abstract class AbstractLeafComponent<T> implements Component<T> {
 
     private final ComponentsRecyclerAdapter.ComponentObservable mObservable = new ComponentsRecyclerAdapter.ComponentObservable(this);
@@ -41,29 +47,28 @@ public abstract class AbstractLeafComponent<T> implements Component<T> {
         return mObservable;
     }
 
-    private final ViewTypeBinderPair<T> mBuf = new ViewTypeBinderPair<>();
+    private final ViewTypeBinderPair.Builder<T> mBuf = ViewTypeBinderPair.create();
 
     // handler が扱う ViewHolder の型について関知しないが、生成時に正しい型のオブジェクトが生成されて
     // いるはずなので、unchecked 警告を抑制する。
+    @SuppressWarnings("unchecked")
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int poInThisComponent, int posInAllItems) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int posInThisComponent) {
         synchronized (mBuf) {
-            getViewTypeBinderPair(mBuf, poInThisComponent);
-            ((Binder<RecyclerView.ViewHolder, T>) mBuf.getBinder())
-                    .bindViewHolder(holder, this, poInThisComponent, posInAllItems);
+            ((Binder<RecyclerView.ViewHolder, T>) getViewTypeBinderPair(mBuf, posInThisComponent).getBinder())
+                    .bindViewHolder(holder, this, posInThisComponent);
         }
     }
 
     @Override
-    public final int getItemViewType(int positionInThisComponent, int positionInAdapter) {
+    public final int getItemViewType(int posInThisComponent) {
         synchronized (mBuf) {
-            getViewTypeBinderPair(mBuf, positionInThisComponent);
-            return mBuf.getViewType().value;
+            return getViewTypeBinderPair(mBuf, posInThisComponent).getViewType().value;
         }
     }
 
-    void getViewTypeBinderPair(ViewTypeBinderPair<T> out, int posInThisComponent) {
-        viewTypeBinderPairProvider.getViewTypeBinderPair(out, this, posInThisComponent);
+    ViewTypeBinderPair<T> getViewTypeBinderPair(ViewTypeBinderPair.Builder<T> out, int posInThisComponent) {
+        return viewTypeBinderPairProvider.getViewTypeBinderPair(out, this, posInThisComponent);
     }
 
 }
