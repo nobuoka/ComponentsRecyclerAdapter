@@ -1,4 +1,4 @@
-String libraryVersionStr = '0.1.0'
+String libraryVersionStr = '0.2.0-SNAPSHOT'
 
 childProjects.each {
     it.value.afterEvaluate { childProject ->

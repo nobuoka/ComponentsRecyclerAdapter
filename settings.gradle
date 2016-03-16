@@ -1,1 +1,1 @@
-include ':demo', ':library', ':library:core'
+include ':demo', ':library', ':library:core', ':library:databinding'
