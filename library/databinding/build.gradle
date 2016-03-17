@@ -2,6 +2,10 @@ evaluationDependsOn(':library')
 apply plugin: 'com.android.library'
 
 ext.artifactIdSuffix = 'databinding'
+ext.dependenciesForPom = [
+        [ group: 'info.vividcode.android', name: 'components-recycler-adapter-core',
+          version: project(':library').ext.libraryVersionStr ]
+]
 
 android {
     compileSdkVersion 23
