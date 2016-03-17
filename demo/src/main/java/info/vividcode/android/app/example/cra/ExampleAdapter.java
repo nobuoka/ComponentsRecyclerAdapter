@@ -14,6 +14,7 @@ import info.vividcode.android.cra.ViewTypeBinderPair;
 import info.vividcode.android.cra.ViewTypeBinderPairProvider;
 import info.vividcode.android.cra.components.ComponentSeries;
 import info.vividcode.android.cra.components.ListReferenceComponent;
+import info.vividcode.android.cra.components.ObservableListReferenceComponent;
 
 public class ExampleAdapter extends ComponentsRecyclerAdapter {
 
@@ -25,7 +26,7 @@ public class ExampleAdapter extends ComponentsRecyclerAdapter {
     }
 
     // サブデータセットを扱うコンポーネントを定義。
-    private final ListReferenceComponent<String> mStringListComponent = ListReferenceComponent.create(
+    private final ObservableListReferenceComponent<String> mStringListComponent = new ObservableListReferenceComponent<>(
             // このコンポーネントが扱う項目の view type は全て content で、StringContentBinder を使って bind される。
             new FixedViewTypeBinderPairProvider<>(VIEW_TYPES.content, StringContentBinder.INSTANCE)
     );
@@ -49,7 +50,7 @@ public class ExampleAdapter extends ComponentsRecyclerAdapter {
                 Arrays.asList(mStringListComponent, mItemListComponent)));
     }
 
-    public ListReferenceComponent<String> getStringComponent() {
+    public ObservableListReferenceComponent<String> getStringComponent() {
         return mStringListComponent;
     }
     public ListReferenceComponent<ListItem> getItemComponent() {

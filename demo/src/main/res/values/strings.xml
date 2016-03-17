@@ -2,4 +2,5 @@
     <string name="app_name">ComponentsRecyclerAdapter</string>
     <string name="recycler_view_new_style">新版</string>
     <string name="recycler_view_old_style">旧版</string>
+    <string name="item_adding_button_label">Add item</string>
 </resources>

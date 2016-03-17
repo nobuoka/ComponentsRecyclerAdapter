@@ -16,7 +16,8 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-        maven { url('https://dl.bintray.com/nobuoka/maven/') }
+        //maven { url('https://dl.bintray.com/nobuoka/maven/') }
+        mavenLocal()
     }
     tasks.withType(JavaCompile) {
         options.encoding = 'UTF-8'

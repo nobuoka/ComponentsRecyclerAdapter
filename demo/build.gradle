@@ -11,6 +11,9 @@ android {
         versionCode 1
         versionName "1.0"
     }
+    dataBinding {
+        enabled = true
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -20,8 +23,10 @@ android {
 }
 
 dependencies {
-    compile 'info.vividcode.android:components-recycler-adapter:0.1.0'
-    //compile project(':library')
+    //compile 'info.vividcode.android:components-recycler-adapter-core:0.2.0-SNAPSHOT'
+    //compile 'info.vividcode.android:components-recycler-adapter-databinding:0.2.0-SNAPSHOT'
+    compile project(':library:core')
+    compile project(':library:databinding')
 
     compile 'com.android.support:recyclerview-v7:23.1.1'
     compile 'com.android.support:appcompat-v7:23.1.1'
