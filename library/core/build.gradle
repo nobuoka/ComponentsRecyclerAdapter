@@ -1,4 +1,4 @@
-evaluationDependsOn(':library')
+evaluationDependsOn(parent.path)
 apply plugin: 'com.android.library'
 
 ext.artifactIdSuffix = 'core'

@@ -1,3 +1,5 @@
+evaluationDependsOn(parent.path)
+
 String libraryVersionStr = ext.libraryVersionStr = '0.2.0-SNAPSHOT'
 
 childProjects.each {

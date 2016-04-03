@@ -1,10 +1,10 @@
-evaluationDependsOn(':library')
+evaluationDependsOn(parent.path)
 apply plugin: 'com.android.library'
 
 ext.artifactIdSuffix = 'databinding'
 ext.dependenciesForPom = [
         [ group: 'info.vividcode.android', name: 'components-recycler-adapter-core',
-          version: project(':library').ext.libraryVersionStr ]
+          version: project.parent.ext.libraryVersionStr ]
 ]
 
 android {
@@ -31,7 +31,7 @@ android {
 }
 
 dependencies {
-    compile project(':library:core')
+    compile parent.project('core')
 
     compile 'com.android.support:recyclerview-v7:23+'
     //compile 'com.android.support:appcompat-v7:23.2.1'
